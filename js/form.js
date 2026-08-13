@@ -1,14 +1,31 @@
-// Class Contato
+let listaContatos = [];
+
 class Contato {
-    constructor(nome, sobrenome, email, cpf, telefone, contato) {
+    constructor(nome, email, telefone, contato, mensagem) {
         this.nome = nome;
-        this.sobrenome = sobrenome;
         this.email = email;
-        this.cpf = cpf;
         this.telefone = telefone;
         this.contato = contato;
+        this.mensagem = mensagem;
     }
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+    const inputNome = document.querySelector('input[name="nome"]');
+    const inputTelefone = document.querySelector('input[name="telefone"]');
+
+    if (inputNome) {
+        inputNome.addEventListener("input", function () {
+            this.value = this.value.replace(/[^a-zA-ZáàâãéèêíïóôõöúçñÁÀÂÃÉÈÊÍÏÓÔÕÖÚÇÑ\s]/g, "");
+        });
+    }
+
+    if (inputTelefone) {
+        inputTelefone.addEventListener("input", function () {
+            this.value = this.value.replace(/\D/g, "");
+        });
+    }
+});
 
 function Post(form) {
     if (typeof event !== 'undefined') {
@@ -16,15 +33,18 @@ function Post(form) {
     }
 
     let nome = form.elements.namedItem("nome").value;
-    let sobrenome = form.elements.namedItem("sobrenome").value;
     let email = form.elements.namedItem("email").value;
-    let cpf = form.elements.namedItem("cpf").value;
     let telefone = form.elements.namedItem("telefone").value;
     let meioContato = form.elements.namedItem("contato").value;
+    let mensagem = form.elements.namedItem("mensagem").value;
 
-    let dadosContato = new Contato(nome, sobrenome, email, cpf, telefone, meioContato);
+    let dadosContato = new Contato(nome, email, telefone, meioContato, mensagem);
 
-    alert(`Obrigado sr(a) ${dadosContato.nome} ${dadosContato.sobrenome}, os seus dados foram encaminhados com sucesso!`);
+    listaContatos.push(dadosContato);
+
+    console.log(`DADOS RECEBIDOS\nNome:     ${dadosContato.nome}\nE-mail:   ${dadosContato.email}\nTelefone: ${dadosContato.telefone}\nTipo:     ${dadosContato.contato}\nMensagem: ${dadosContato.mensagem}`);
+
+    alert(`Obrigado sr(a) ${dadosContato.nome}, os seus dados foram encaminhados com sucesso!`);
     
     form.reset(); 
 }

@@ -1,7 +1,5 @@
-// Array storage class
 let carouselArr = [];
 
-// class Carousel
 class Carousel {
     constructor(image, title, url) {
         this.image = image;
@@ -12,37 +10,63 @@ class Carousel {
     static Start(arr) {
         if (arr) {
             if (arr.length > 0) {
+                Carousel._arr = arr;
                 Carousel._sequence = 0;
                 Carousel._size = arr.length;
-                Carousel._arr = arr;
-                Carousel.Next(); // Executa o primeiro item
-                Carousel._interval = setInterval(function () {
-                    Carousel.Next();
-                }, 2000); // Alterna a cada 2 segundos
+                Carousel.Show();
+                Carousel.StartTimer();
             }
         } else {
             throw "Method Start need a Array Variable.";
         }
     }
 
-    static Next() {
-        if (!Carousel._arr || Carousel._arr.length === 0) return;
+    static StartTimer() {
+        clearInterval(Carousel._interval);
+        Carousel._interval = setInterval(function () {
+            Carousel.Next();
+        }, 5000);
+    }
 
-        const item = Carousel._arr[Carousel._sequence];
+    static Show() {
+        let item = Carousel._arr[Carousel._sequence];
 
         const carouselDiv = document.getElementById("carousel");
         const titleDiv = document.getElementById("carousel-title");
 
-        if (carouselDiv) {
-            carouselDiv.innerHTML = `<a href="${item.url}"><img src="img/${item.image}" alt="${item.title}"></a>`;
+        if (carouselDiv && item) {
+            let imgSrc = item.image.startsWith("img/") ? item.image : `img/${item.image}`;
+            carouselDiv.innerHTML = `
+                <button class="carousel-btn prev-btn" onclick="Carousel.Prev()">&#10094;</button>
+                <a href="${item.url}">
+                    <img src="${imgSrc}" alt="${item.title}" class="carousel-img" />
+                </a>
+                <button class="carousel-btn next-btn" onclick="Carousel.Next()">&#10095;</button>
+            `;
         }
 
-        if (titleDiv) {
-            titleDiv.innerHTML = `<a href="${item.url}">${item.title}</a>`;
+        if (titleDiv && item) {
+            titleDiv.innerHTML = `
+                <a href="${item.url}">${item.title}</a>
+            `;
         }
+    }
 
-        // Incrementa o índice e volta ao zero no final
-        Carousel._sequence = (Carousel._sequence + 1) % Carousel._size;
+    static Next() {
+        Carousel._sequence++;
+        if (Carousel._sequence >= Carousel._size) {
+            Carousel._sequence = 0;
+        }
+        Carousel.Show();
+        Carousel.StartTimer();
+    }
+
+    static Prev() {
+        Carousel._sequence--;
+        if (Carousel._sequence < 0) {
+            Carousel._sequence = Carousel._size - 1;
+        }
+        Carousel.Show();
+        Carousel.StartTimer();
     }
 }
-

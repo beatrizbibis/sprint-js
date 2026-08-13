@@ -1,4 +1,3 @@
-// Array para armazenar os carros selecionados
 let carArr = [];
 
 class Car {
@@ -17,7 +16,6 @@ class Car {
     }
 } 
 
-// Busca no array se o carro já existe (retorna o índice ou -1)
 function GetCarArrPosition(arr, carClass) {
     for (let i = 0; i < arr.length; i++) {
         if (arr[i].nome === carClass.nome)
